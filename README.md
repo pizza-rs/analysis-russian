@@ -1,49 +1,76 @@
-# pizza-analysis-russian
+<div align="center">
 
-Russian language analysis with ё→е normalization, light stemmer, and stop words.
+# 🇷🇺 pizza-analysis-russian
 
-Part of the [Pizza](https://pizza.rs) search engine.
+**Russian text analysis plugin for [INFINI Pizza](https://pizza.rs)**
+
+[![Crate](https://img.shields.io/badge/crate-pizza--analysis--russian-blue)](https://github.com/pizza-rs/analysis-russian)
+[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+
+</div>
+
+---
+
+## Overview
+
+Production-ready Russian language analysis with character normalization, light stemming,
+and stop word removal. Designed for Russian full-text search with correct handling of
+the ё/е alternation common in Russian text.
 
 ## Components
 
-| Name | Type | Description |
-|------|------|-------------|
-| `russian_yo` | Token Filter | Normalizes ё→е (common Russian spelling variation) |
-| `russian_stem` | Token Filter | Russian light stemmer — removes common case/plural/verb suffixes |
-| `russian_stop` | Token Filter | Russian stop words filter (159 words) |
-| `russian` | Analyzer | Full pipeline: lowercase → yo_normalization → stop → stem |
+| Type | Name | Description |
+|:-----|:-----|:------------|
+| TokenFilter | `russian_yo` | Normalize ё→е / Ё→Е (common spelling variation) |
+| TokenFilter | `russian_light_stem` | Light suffix-stripping stemmer for Russian |
+| TokenFilter | `russian_stop` | Russian stop words (159 entries) |
+| Analyzer | `russian` | Full pipeline: lowercase → russian_yo → light_stem → stop |
 
-## Usage
+### Russian Yo Normalization
 
-### Built-in Analyzer
+In modern Russian text, ё (yo) is frequently written as е (ye). This filter
+normalizes both forms for consistent matching:
 
-```json
-{
-  "analyzer": {
-    "type": "russian"
-  }
-}
+- `ещё` → `еще`
+- `Ёлка` → `Елка`
+
+### Light Stemmer
+
+Removes common Russian suffixes without aggressive over-stemming. Handles
+noun/adjective/verb endings while preserving the stem for high-precision matching.
+
+## Example
+
+```rust
+use pizza_engine::analysis::AnalysisFactory;
+
+let mut factory = AnalysisFactory::new();
+pizza_analysis_russian::register_all(&mut factory);
+
+let analyzer = factory.get_analyzer("russian").unwrap();
+// "бегущие собаки" → tokens: ["бегущ", "собак"]
 ```
 
-### Custom Pipeline
+## Installation
 
-```json
-{
-  "analyzer": {
-    "type": "custom",
-    "tokenizer": "standard",
-    "filter": ["russian_yo", "russian_stem", "russian_stop"]
-  }
-}
+```toml
+[dependencies]
+pizza-analysis-russian = "0.1"
+```
+
+Or via `pizza-analysis-all`:
+
+```toml
+[dependencies]
+pizza-analysis-all = { version = "0.1", features = ["russian"] }
 ```
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+MIT
 
-## Related Crates
+---
 
-- [analysis-core](https://github.com/pizza-rs/analysis-core) — Core analysis components and pipeline
-- [analysis-icu](https://github.com/pizza-rs/analysis-icu) — ICU Unicode normalization and tokenization
-- [analysis-english](https://github.com/pizza-rs/analysis-english) — English analysis
-- [analysis-all](https://github.com/pizza-rs/analysis-all) — Meta-crate registering all analyzers
+<div align="center">
+<sub>Part of the <a href="https://pizza.rs">INFINI Pizza</a> ecosystem</sub>
+</div>
