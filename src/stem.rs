@@ -3,7 +3,8 @@
 use alloc::borrow::Cow;
 use alloc::string::String;
 use alloc::vec::Vec;
-use pizza_engine::analysis::{Token, TokenFilter};
+use pizza_engine::analysis::Token;
+use pizza_engine::analysis::TokenFilter;
 
 /// Russian light stemmer — removes common Russian suffixes.
 #[derive(Clone, Debug, Default)]
@@ -57,8 +58,8 @@ fn stem_russian_light(chars: &[char]) -> Option<usize> {
     if len > 4 {
         let suffix: String = chars[len - 3..].iter().collect();
         match suffix.as_str() {
-            "ами" | "ями" | "ому" | "ого" | "ним" | "ных" | "ить" | "ать" | "ять"
-            | "ной" | "ное" | "ная" | "ные" => return Some(len - 3),
+            "ами" | "ями" | "ому" | "ого" | "ним" | "ных" | "ить" | "ать" | "ять" | "ной"
+            | "ное" | "ная" | "ные" => return Some(len - 3),
             _ => {}
         }
     }
@@ -67,8 +68,8 @@ fn stem_russian_light(chars: &[char]) -> Option<usize> {
     if len > 3 {
         let suffix: String = chars[len - 2..].iter().collect();
         match suffix.as_str() {
-            "ов" | "ев" | "ей" | "ий" | "ая" | "ое" | "ые" | "ам" | "ям" | "ом" | "ем"
-            | "ах" | "ях" | "ую" | "юю" | "ть" | "ых" | "их" => return Some(len - 2),
+            "ов" | "ев" | "ей" | "ий" | "ая" | "ое" | "ые" | "ам" | "ям" | "ом" | "ем" | "ах"
+            | "ях" | "ую" | "юю" | "ть" | "ых" | "их" => return Some(len - 2),
             _ => {}
         }
     }
